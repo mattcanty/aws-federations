@@ -1,12 +1,13 @@
 Resources:
   GithubOidc:
     Type: AWS::IAM::OIDCProvider
+    Condition: CreateOIDCProvider
     Properties:
       Url: https://token.actions.githubusercontent.com
-      ThumbprintList: 
-        - 6938fd4d98bab03faadb97b34396831e3780aea1
       ClientIdList: 
-        - https://github.com/mattcanty
+        - sts.amazonaws.com
+      ThumbprintList:
+        - a031c46782e6e6c662c2c87c76da9aa62ccabd8e
 
   GitHubMattCantyDNSActionsWriteRole:
     Type: AWS::IAM::Role
@@ -21,7 +22,7 @@ Resources:
               Federated: !Ref GithubOidc
             Condition:
               StringLike:
-                token.actions.githubusercontent.com:sub: !Sub repo:mattcanty/dns:*
+                token.actions.githubusercontent.com:sub: repo:mattcanty/dns:*
 
 Outputs:
   Role:
