@@ -28,3 +28,4 @@ jobs:
         with:
           name: FederatedAccessAWS
           template: stack.yaml
+          capabilities: CAPABILITY_NAMED_IAM
