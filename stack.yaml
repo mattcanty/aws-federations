@@ -1,5 +1,5 @@
 Resources:
-  GithubOIDC:
+  GithubOidc:
     Type: AWS::IAM::OIDCProvider
     Properties:
       Url: https://token.actions.githubusercontent.com
@@ -18,7 +18,7 @@ Resources:
           - Effect: Allow
             Action: sts:AssumeRoleWithWebIdentity
             Principal:
-              Federated: !Ref GithubOIDC
+              Federated: !Ref GithubOidc
             Condition:
               StringLike:
                 token.actions.githubusercontent.com:sub: !Sub repo:mattcanty/dns:*
