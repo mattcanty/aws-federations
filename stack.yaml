@@ -1,26 +1,5 @@
-# Parameters:
-#   GithubOrg:
-#     Type: String
-#   FullRepoName:
-#     Type: String
-
 Resources:
-  # Role:
-  #   Type: AWS::IAM::Role
-  #   Properties:
-  #     RoleName: ExampleGithubRole
-  #     ManagedPolicyArns: [arn:aws:iam::aws:policy/ReadOnlyAccess]
-  #     AssumeRolePolicyDocument:
-  #       Statement:
-  #         - Effect: Allow
-  #           Action: sts:AssumeRoleWithWebIdentity
-  #           Principal:
-  #             Federated: !Ref GithubOidc
-  #           Condition:
-  #             StringLike:
-  #               token.actions.githubusercontent.com:sub: !Sub repo:${FullRepoName}:*
-
-  GithubOidc:
+  GithubOIDC:
     Type: AWS::IAM::OIDCProvider
     Properties:
       Url: https://token.actions.githubusercontent.com
@@ -29,6 +8,21 @@ Resources:
       ClientIdList: 
         - https://github.com/mattcanty
 
-# Outputs:
-#   Role:
-#     Value: !GetAtt Role.Arn   
+  GitHub_MattCanty_DNS_Actions_Write_Role:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: GitHub_MattCanty_DNS_Actions_Write
+      ManagedPolicyArns: [arn:aws:iam::aws:policy/ReadOnlyAccess]
+      AssumeRolePolicyDocument:
+        Statement:
+          - Effect: Allow
+            Action: sts:AssumeRoleWithWebIdentity
+            Principal:
+              Federated: !Ref GithubOIDC
+            Condition:
+              StringLike:
+                token.actions.githubusercontent.com:sub: !Sub repo:mattcanty/dns:*
+
+Outputs:
+  Role:
+    Value: !GetAtt GitHub_MattCanty_DNS_Actions_Write_Role.Arn   
