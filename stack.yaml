@@ -22,6 +22,20 @@ Resources:
             Condition:
               StringLike:
                 token.actions.githubusercontent.com:sub: repo:mattcanty/dns:*
+      Policies:
+        - PolicyName: GitHubMattCantyDNSActionsManageRoute53
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement: 
+              - Effect: Allow
+                Action:
+                  - route53:CreateHostedZone
+                  - route53:GetHostedZone
+                  - route53:ListHostedZones
+                  - route53:ChangeResourceRecordSets
+                  - route53:ListResourceRecordSets
+                  - route53:UpdateHostedZoneComment
+                Resource: "*"
 
 Outputs:
   Role:
