@@ -8,10 +8,10 @@ Resources:
       ClientIdList: 
         - https://github.com/mattcanty
 
-  GitHub_MattCanty_DNS_Actions_Write_Role:
+  GitHubMattCantyDNSActionsWriteRole:
     Type: AWS::IAM::Role
     Properties:
-      RoleName: GitHub_MattCanty_DNS_Actions_Write
+      RoleName: GitHubMattCantyDNSActionsWrite
       ManagedPolicyArns: [arn:aws:iam::aws:policy/ReadOnlyAccess]
       AssumeRolePolicyDocument:
         Statement:
@@ -25,4 +25,4 @@ Resources:
 
 Outputs:
   Role:
-    Value: !GetAtt GitHub_MattCanty_DNS_Actions_Write_Role.Arn   
+    Value: !GetAtt GitHubMattCantyDNSActionsWriteRole.Arn   
