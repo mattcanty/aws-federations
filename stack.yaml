@@ -8,11 +8,35 @@ Resources:
       ThumbprintList:
         - 6938fd4d98bab03faadb97b34396831e3780aea1
 
+  GitHubMattCantyDNSActionsReadRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: GitHubMattCantyDNSActionsRead
+      AssumeRolePolicyDocument:
+        Statement:
+          - Effect: Allow
+            Action: sts:AssumeRoleWithWebIdentity
+            Principal:
+              Federated: !Ref GithubOidc
+            Condition:
+              StringLike:
+                token.actions.githubusercontent.com:sub: repo:mattcanty/dns:*
+      Policies:
+        - PolicyName: GitHubMattCantyDNSActionsManageRoute53
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement: 
+              - Effect: Allow
+                Action:
+                  - route53:GetHostedZone
+                  - route53:ListHostedZones
+                  - route53:ListResourceRecordSets
+                Resource: "*"
+
   GitHubMattCantyDNSActionsWriteRole:
     Type: AWS::IAM::Role
     Properties:
       RoleName: GitHubMattCantyDNSActionsWrite
-      ManagedPolicyArns: [arn:aws:iam::aws:policy/ReadOnlyAccess]
       AssumeRolePolicyDocument:
         Statement:
           - Effect: Allow
