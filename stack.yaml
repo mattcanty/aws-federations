@@ -3,7 +3,7 @@ Resources:
     Type: AWS::IAM::OIDCProvider
     Properties:
       Url: https://token.actions.githubusercontent.com
-      ClientIdList: 
+      ClientIdList:
         - sts.amazonaws.com
       ThumbprintList:
         - 6938fd4d98bab03faadb97b34396831e3780aea1
@@ -25,7 +25,7 @@ Resources:
         - PolicyName: GitHubMattCantyDNSActionsManageRoute53
           PolicyDocument:
             Version: "2012-10-17"
-            Statement: 
+            Statement:
               - Effect: Allow
                 Action:
                   - route53:GetHostedZone
@@ -50,7 +50,60 @@ Resources:
         - PolicyName: GitHubMattCantyDNSActionsManageRoute53
           PolicyDocument:
             Version: "2012-10-17"
-            Statement: 
+            Statement:
+              - Effect: Allow
+                Action:
+                  - route53:CreateHostedZone
+                  - route53:GetHostedZone
+                  - route53:ListHostedZones
+                  - route53:ChangeResourceRecordSets
+                  - route53:ListResourceRecordSets
+                  - route53:UpdateHostedZoneComment
+                Resource: "*"
+
+  GitHubMattCantyRainClockActionsReadRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: GitHubMattCantyRainClockActionsRead
+      AssumeRolePolicyDocument:
+        Statement:
+          - Effect: Allow
+            Action: sts:AssumeRoleWithWebIdentity
+            Principal:
+              Federated: !Ref GithubOidc
+            Condition:
+              StringLike:
+                token.actions.githubusercontent.com:sub: repo:mattcanty/rain-clock:*
+      Policies:
+        - PolicyName: GitHubMattCantyRainClockActionsManageRoute53
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - route53:GetHostedZone
+                  - route53:ListHostedZones
+                  - route53:ListResourceRecordSets
+                Resource: "*"
+
+  GitHubMattCantyRainClockActionsWriteRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: GitHubMattCantyRainClockActionsWrite
+      AssumeRolePolicyDocument:
+        Statement:
+          - Effect: Allow
+            Action: sts:AssumeRoleWithWebIdentity
+            Principal:
+              Federated: !Ref GithubOidc
+            Condition:
+              StringLike:
+                token.actions.githubusercontent.com:sub: repo:mattcanty/rain-clock:*
+      Policies:
+        - PolicyName: GitHubMattCantyRainClockActionsManageRoute53
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
               - Effect: Allow
                 Action:
                   - route53:CreateHostedZone
@@ -62,5 +115,11 @@ Resources:
                 Resource: "*"
 
 Outputs:
-  Role:
-    Value: !GetAtt GitHubMattCantyDNSActionsWriteRole.Arn   
+  DNSReadRole:
+    Value: !GetAtt GitHubMattCantyDNSActionsReadRole.Arn
+  DNSWriteRole:
+    Value: !GetAtt GitHubMattCantyDNSActionsWriteRole.Arn
+  RainClockReadRole:
+    Value: !GetAtt GitHubMattCantyRainClockActionsReadRole.Arn
+  RainClockWriteRole:
+    Value: !GetAtt GitHubMattCantyRainClockActionsWriteRole.Arn
